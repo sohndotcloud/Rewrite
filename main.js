@@ -33,7 +33,7 @@ function main() {
                 try {
                     fs.existsSync(targetDirectory);
                 } catch (e) {
-                    alert();
+                    usage();
                     return false;
                 }
                 console.log("Working Directory: ", targetDirectory);
@@ -49,6 +49,15 @@ function main() {
 
     const { readdir } = require('fs').promises;
     
+}
+
+function usage() {
+    console.log(`
+        node main.js
+        Rewrite, Other_name_for_same_program(), Yet another name for the same program. -- This line parsed for whatis database.
+        SYNOPSIS
+        node main.js, [-pd ] [-d path ] 
+        `)
 }
 
 function isNumeric(str) {
