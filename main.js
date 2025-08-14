@@ -1,85 +1,48 @@
-const process = require('process');
-const fs = require('fs');
+const { readdir } = require('fs').promises;
+const Config = require('./config.js');
+const readline = require('readline');
 
-class Config {
-    constructor(directory, mask) {
-        this.directory = directory;
-        this.mask = mark;
+const rl = readline.createInterface
+
+async function listFiles(path) {
+  let apps;
+  try {
+    process.chdir(path);
+    apps = await readdir(path);
+    for (const app of apps) {
+      console.log(app);
     }
+  } catch (err) {
+    console.error("Error reading directory:", err);
+  }
+  return apps;
+} 
+
+function ask(question) {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+  return new Promise(resolve => {
+    rl.question(question, answer => {
+      rl.close();
+      resolve(answer);
+    });
+  });
 }
 
-function main() {
-    const args = process.argv.slice(2);
-    let index = 0; 
-    outerloop:
-    while (index < args.length) {
-        switch (args[index]) {
-            case '-p':
-                index++;
-                let mask = args[index];
-                if (!isNumeric(mask)) {
-                    alert();
-                    break outerloop;
-                }
+async function main() {
+  const args = process.argv.slice(2);
+  const driver = require('./driver');
+  const config = driver.start(args);
 
-                break;
-            case '-d':
-                if (index + 1 < args.length) {
-                    alert();
-                    break outerloop;
-                }
-                index++;
-                let targetDirectory = args[index];
-                try {
-                    fs.existsSync(targetDirectory);
-                } catch (e) {
-                    usage();
-                    return false;
-                }
-                console.log("Working Directory: ", targetDirectory);
-                break;
-            default:
-                console.log("It's not configured for this");
-                break;
-        }
-    }
-
-    console.log("Broke Out of the Loop!");
-    const basePath = '/Applications';
-
-    const { readdir } = require('fs').promises;
-    
+  let input = await ask("The engine is ready to change the permission levels for this directory. Avoid directories? (Y/n):");
+  if (input == "n" || input == "N") {
+    console.log("Masking directories");
+  }
+  
+  let files = listFiles(config.directory);  
 }
 
-function usage() {
-    console.log(`
-        node main.js
-        Rewrite, Other_name_for_same_program(), Yet another name for the same program. -- This line parsed for whatis database.
-        SYNOPSIS
-        node main.js, [-pd ] [-d path ] 
-        `)
-}
-
-function isNumeric(str) {
-  return typeof str === "string" && str.trim() !== "" && !isNaN(str);
-}
-
-function alert() {
-    console.log("It's not configured for this");
-}
-
-
-async function listFiles(readdir, path) {
-    try {
-        const path = "/Applications";
-        process.chdir(path);
-        const apps = await readdir(path);
-        for (const app of apps) {
-            console.log(app);
-        }
-    } catch (err) {
-        console.error('Error reading directory:', err);
-    }
-}
 
 main();
