@@ -5,9 +5,11 @@
   "license": "ISC",
   "author": "",
   "type": "commonjs",
-  "main": "index.js",
+  "main": "main.js",
+  "bin": "main.js",
   "scripts": {
     "start": "node main.js",
+    "build": "pkg . -t node18-macos-arm64",
     "test": "echo \"Error: no test specified\" && exit 1"
   }
 }
