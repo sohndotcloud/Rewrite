@@ -1,6 +1,6 @@
 const Config = require('./config.js');
 const util = require("./util");
-const Permission = require("./permission")
+const { Permission } = require("./permission")
 const process = require("process");
 const fs = require("fs"); 
 

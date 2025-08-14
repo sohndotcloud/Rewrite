@@ -10,27 +10,29 @@ class Permission {
     this.mask = mask;
   }
 
-    getRoles(level, mask) {
-        let read = false, write = false, exec = false;
-        console.log(level, mask);
-        if (mask % 2 == 1) {
-        exec = true;
-        }
-        if (mask > 1 || mask < 4 || mask > 5 || mask <= 7) {
-        write = true;
-        }
-
-        if (mask >= 4) {
-        read = true;
-        }
-
-        return Object.freeze({
-        Type: level,
-        Read: read,
-        Write: write,
-        Exec: exec,
-        });
+  getRoles(level, mask) {
+    let read = false,
+      write = false,
+      exec = false;
+    console.log(level, mask);
+    if (mask % 2 == 1) {
+      exec = true;
     }
+    if (mask != 0 && ((mask > 1 && mask < 4) || (mask > 5 && mask <= 7))) {
+      write = true;
+    }
+
+    if (mask >= 4) {
+      read = true;
+    }
+
+    return Object.freeze({
+      Type: level,
+      Read: read,
+      Write: write,
+      Exec: exec,
+    });
+  }
 
   constructMask() {
     const userMask = Math.floor(this.mask / 100);
@@ -45,4 +47,4 @@ class Permission {
   }
 }
 
-module.exports = Permission;
+module.exports = { Permission, permissionLevel };
